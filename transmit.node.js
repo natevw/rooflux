@@ -30,7 +30,7 @@ inverter.rpc.post(CALL, function (e,d) {
                 obj['Total produced'] = (+res.value/1000).toFixed(1) + "kW"; break;
         }
     });
-    livesite.data({s:'pwd'}).post(obj, function (e) {
+    livesite.data({s:'pwd'}).post(obj, function (e,d) {
         if (e) console.error(e);
         else console.log(d);
     });
