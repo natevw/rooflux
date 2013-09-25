@@ -9,6 +9,7 @@
         small { font-style: italic; }
         a { color: #559; }
     </style>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
 </head><body>
 
 <h1>Solar System Status</h1>
@@ -40,7 +41,8 @@
 <script>
 var feed = new EventSource("/data");
 feed.onmessage = function (evt) {
-    console.log("server state", JSON.parse(evt.data));
+    console.log("server state", evt);
+    d3.select('pre').text(evt.data);
 }
 
 </script>
