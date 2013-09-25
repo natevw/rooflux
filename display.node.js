@@ -29,7 +29,7 @@ http.createServer(function (req, res) {
         res.end(HTML);      // TODO: not modified `if-modified-since` > startup
     } else if (req.url.pathname === "/data") {
         if (req.method === 'GET') {
-            res.writeHead(200, {'Content-Type':"text/event-stream"});
+            res.writeHead(200, {'Content-Type':"text/event-stream",'X-Accel-Buffering':"no"});
             
             var clientVers = +req.headers['last-event-id'];
             if (clientVers === state.vers) /* already current */;
