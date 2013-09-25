@@ -42,7 +42,9 @@
 var feed = new EventSource("/data");
 feed.onmessage = function (evt) {
     console.log("server state", evt);
-    d3.select('pre').text(evt.data);
+    var data = JSON.parse(evt.data),
+        str = (typeof data !== 'string') ? JSON.stringify(data, null, 4) : data;
+    d3.select('pre').text(str);
 }
 
 </script>
