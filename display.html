@@ -1,0 +1,46 @@
+<!doctype html>
+<html><head>
+    <meta charset="UTF-8">
+    <title>natevw's solar status</title>
+    <style>
+        body { font-family: Georgia, serif; max-width: 80ex; text-indent: 1.5em; }
+        pre, code { text-indent: 0; }
+        h1, h2, h3 { font-family: Futura, sans-serif; text-indent: 0; }
+        small { font-style: italic; }
+        a { color: #559; }
+    </style>
+</head><body>
+
+<h1>Solar System Status</h1>
+
+<pre>
+[DC info over roof] -> inverter -> [AC info over meter]
+                          |
+                          |
+                       [graph]
+
+
+
+[[really really wide system cost recovery progress bar]]
+</pre>
+
+
+<h2>Behind-the-scenes</h2>
+
+<p>System consists of twenty Itek 245W solar photovoltaic modules feeding a grid-tied Eltek THEIA 4.4 UL inverter. This equipment is Washington manufactured, qualifying us for some lucrative <a href="http://www.itekenergy.com/financial-incentives/">state subsidies</a> in addition to the monthly power bill savings.</p>
+
+<p>I built this custom display/API to help me share this data online. The live display uses <a href="http://www.w3.org/TR/eventsource/">Server-Sent Events</a> from <a href="http://nodejs.org/">node.js</a>; the charts are from data logged into <a href="http://couchdb.apache.org/">CouchDB</a>, loaded via my <a href="https://github.com/natevw/fermata">Fermata</a> library, and displayed using <a href="http://d3js.org/">D3.js</a> to generate SVG graphics.<br>[<a href="https://github.com/natevw/rooflux">view source</a>]</p>
+
+
+<h2>About me</h2>
+
+<h3><img src="http://www.gravatar.com/avatar/d4df3d19d4f89cc9a151275748b1877b?s=48"> natevw</h3>
+
+<p>I&#39;m a <a href="http://exts.ch/">freelance software developer</a> who likes to make interesting challenges seem easy. Check out <a href="http://n.exts.ch/">my blog</a> for some other projects I've been working on lately.</p>
+
+<script>
+    
+</script>
+
+<small>Copyright © 2013 Nathan Vander Wilt. Some rights reserved.</small>
+</body></html>
