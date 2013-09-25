@@ -61,7 +61,7 @@ http.createServer(function (req, res) {
                      state._send(openReqs[key]);
                 });
                 res.writeHead(201);
-                res.end("Broadcast to "+reqKeys.length+" listeners.\n");
+                res.end(JSON.stringify("Broadcast to "+reqKeys.length+" listeners.\n"));
             });
         } else {
             res.writeHead(400);
