@@ -29,13 +29,21 @@ http.createServer(function (req, res) {
         res.end(HTML);      // TODO: not modified `if-modified-since` > startup
     } else if (req.url.pathname === "/data") {
         if (req.method === 'GET') {
-            res.writeHead(200, {'Content-Type':"text/event-stream",'X-Accel-Buffering':"no"});
+            var accepts = req.headers['accept'] || '',
+                acceptsEventStream = accepts.split(',').filter(function (d) {
+                    return (d.indexOf("text/event-stream") === 0);
+                })[0];
+            if (!acceptsEventStream) {
+                res.writeHead(200, {'Content-Type':"application/json",'Vary':"Accept"});
+                return res.end(JSON.stringify(state.data));
+            }
             
+            res.writeHead(200, {'Content-Type':"text/event-stream",'Vary':"Accept",'X-Accel-Buffering':"no"});
             var clientVers = +req.headers['last-event-id'];
             if (clientVers === state.vers) /* already current */;
             else state._send(res);
             
-            //res.end("");
+            // don't end request, but keep for sending more data later!
             var key = Math.random().toFixed(20).slice(2);
             openReqs[key] = res;        // not a typo, we write to response
             req.on('close', function () {
