@@ -30,7 +30,7 @@ inverter.rpc.post(CALL, function (e,d) {
             case '0010':
                 obj['AC output'] = (+res.value).toFixed(1) + "W"; break;
             case '0043':
-                obj['Total produced'] = (+res.value/1000).toFixed(1) + "kW"; break;
+                obj['Total produced'] = (+res.value/1000).toFixed(1) + "kWh"; break;
         }
     });
     livesite.data({s:'pwd'}).post(obj, function (e,d) {
