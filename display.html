@@ -19,7 +19,7 @@
             color: grey;
         }
     </style>
-    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <!--<script src="http://d3js.org/d3.v3.min.js"></script>-->
 </head><body>
 
 <h1>Greenhouse monitor</h1>
@@ -57,10 +57,10 @@ feed.onmessage = function (evt) {
         water = waterTemp(+fields[6].split('=')[1]),
         board = airTemp(+fields[8].split('=')[1]),
         onBatt = powerStatus(+fields[9].split('=')[1]);
-    d3.select('#time').text(time);
-    d3.select('#tnk').text(c2f(water).toFixed(3)+"ºF");
-    d3.select('#air').text(c2f(board).toFixed(1)+"ºF");
-    d3.select('#pwr').text(onBatt);
+    document.getElementById('time').textContent = time;
+    document.getElementById('tnk').textContent = c2f(water).toFixed(3)+"ºF";
+    document.getElementById('air').textContent = c2f(board).toFixed(1)+"ºF";
+    document.getElementById('pwr').textContent = onBatt;
 };
 
 function c2f(c) { return 1.8 * c + 32; }
