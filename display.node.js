@@ -43,6 +43,11 @@ http.createServer(function (req, res) {
             if (clientVers === state.vers) /* already current */;
             else state._send(res);
             
+            // HACK: T-Mobile has a proxy that buffers EventSource data — this serves to get things moving
+            var b = new Buffer(8192);
+            b.fill(45);
+            res.write(":"+b.toString()+"\n");
+            
             // don't end request, but keep for sending more data later!
             var key = Math.random().toFixed(20).slice(2);
             openReqs[key] = res;        // not a typo, we write to response

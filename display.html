@@ -63,11 +63,6 @@ feed.onmessage = function (evt) {
     d3.select('#pwr').text(onBatt);
 };
 
-// WORKAROUND: T-Mobile's proxy seems to hold onto the EventSource response for a while before streaming it. grab it once old school…
-d3.json("/data", function (e,d) {
-    if (!e) feed.onmessage({data:JSON.stringify(d)});
-});
-
 function c2f(c) { return 1.8 * c + 32; }
 
 function waterTemp(b) {
