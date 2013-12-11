@@ -1,36 +1,42 @@
 <!doctype html>
 <html><head>
     <meta charset="UTF-8">
-    <title>natevw's solar status</title>
+    <title>natevw's greenhouse monitor</title>
     <style>
-        body { font-family: Georgia, serif; max-width: 80ex; text-indent: 1.5em; }
+        body { font-family: Georgia, serif; max-width: 80ex; text-indent: 1.5em; background: #efe; color: #252; }
         pre, code { text-indent: 0; }
         h1, h2, h3 { font-family: Futura, sans-serif; text-indent: 0; }
         small { font-style: italic; }
-        a { color: #559; }
+        a { color: #955; }
+        
+        .data {
+            font-weight: bold;
+        }
+        .data:empty::before {
+            content: "n/a";
+            font-weight: lighter;
+            font-style: italic;
+            color: grey;
+        }
     </style>
     <script src="http://d3js.org/d3.v3.min.js"></script>
 </head><body>
 
-<h1>Solar System Status</h1>
+<h1>Greenhouse monitor</h1>
 
 <pre>
-[DC info over roof] -> inverter -> [AC info over meter]
-                          |
-                          |
-                       [graph]
-
-
-
-[[really really wide system cost recovery progress bar]]
+Last update: <span class=data id=time></span>
+Water temperature: <span class=data id=tnk></span>
+Board temperature: <span class=data id=air></span>
+Power status: <span class=data id=pwr></span>
 </pre>
 
 
 <h2>Behind-the-scenes</h2>
 
-<p>System consists of twenty Itek 245W solar photovoltaic modules feeding a grid-tied Eltek THEIA 4.4 UL inverter. This equipment is Washington manufactured, qualifying us for some lucrative <a href="http://www.itekenergy.com/financial-incentives/">state subsidies</a> in addition to the monthly power bill savings.</p>
+<p>Aquaponics system in greenhouse yadda yadda.</p>
 
-<p>I built a custom display service to help me share this data online. The live display uses <a href="http://www.w3.org/TR/eventsource/">Server-Sent Events</a> from <a href="http://nodejs.org/">node.js</a><!--; the charts are from data logged into <a href="http://couchdb.apache.org/">CouchDB</a>, loaded via my <a href="https://github.com/natevw/fermata">Fermata</a> library, and displayed using <a href="http://d3js.org/">D3.js</a> to generate SVG graphics-->. Right now it in rough (i.e. raw data) form.
+<p>I built a custom display service for sharing my <a href="">solar system status</a> which I've repurposed to help me share this data online too. The live display uses <a href="http://www.w3.org/TR/eventsource/">Server-Sent Events</a> from <a href="http://nodejs.org/">node.js</a><!--; the charts are from data logged into <a href="http://couchdb.apache.org/">CouchDB</a>, loaded via my <a href="https://github.com/natevw/fermata">Fermata</a> library, and displayed using <a href="http://d3js.org/">D3.js</a> to generate SVG graphics-->.
 <p>[<a href="https://github.com/natevw/rooflux">view source</a>]</p>
 
 <h2>About me</h2>
@@ -43,9 +49,41 @@
 var feed = new EventSource("/data");
 feed.onmessage = function (evt) {
     console.log("server state", evt);
-    var data = JSON.parse(evt.data),
-        str = (typeof data !== 'string') ? JSON.stringify(data, null, 4) : data;
-    d3.select('pre').text(str);
+    
+    var fields = JSON.parse(evt.data).split(" ");
+    if (fields[2] !== "broadcast:") return;
+    
+    var time = new Date(fields[0]),
+        water = waterTemp(+fields[6].split('=')[1]),
+        board = airTemp(+fields[8].split('=')[1]),
+        onBatt = powerStatus(+fields[9].split('=')[1]);
+    d3.select('#time').text(time);
+    d3.select('#tnk').text(c2f(water).toFixed(3)+"ºF");
+    d3.select('#air').text(c2f(board).toFixed(1)+"ºF");
+    d3.select('#pwr').text(onBatt);
+};
+
+// WORKAROUND: T-Mobile's proxy seems to hold onto the EventSource response for a while before streaming it. grab it once old school…
+d3.json("/data", function (e,d) {
+    if (!e) feed.onmessage({data:JSON.stringify(d)});
+});
+
+function c2f(c) { return 1.8 * c + 32; }
+
+function waterTemp(b) {
+    var sign = (b & 0xf800) ? -1 : 1;
+    return sign * (b & ~0xf800) / (1 << 4);
+}
+
+function airTemp(b) {
+    return (b/1024*3.3-0.5)*100;
+}
+
+function powerStatus(b) {
+    if (b === 0) return "Normal";
+    else if (b > 1024) return "Bogus data…";
+    else if (b > 300) return "On battery!";
+    else return "Unknown: "+b;
 }
 
 </script>

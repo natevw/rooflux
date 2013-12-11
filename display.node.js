@@ -7,7 +7,7 @@ var HTML = fs.readFileSync("./display.html", 'utf8'),
 
 
 var state = {
-    data: {},
+    data: null,
     vers: 0,
     _send: function (res) {
         res.write([
