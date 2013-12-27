@@ -57,8 +57,8 @@ feed.onmessage = function (evt) {
         board = airTemp(+fields[8].split('=')[1]),
         onBatt = powerStatus(+fields[9].split('=')[1]);
     document.getElementById('time').textContent = time;
-    document.getElementById('tnk').textContent = c2f(water).toFixed(3)+"ºF";
-    document.getElementById('air').textContent = c2f(board).toFixed(1)+"ºF";
+    document.getElementById('tnk').textContent = c2f(water).toFixed(3)+"°F";
+    document.getElementById('air').textContent = c2f(board).toFixed(1)+"°F";
     document.getElementById('pwr').textContent = onBatt;
 };
 
